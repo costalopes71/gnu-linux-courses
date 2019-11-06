@@ -1,0 +1,419 @@
+
+=======================================================
+            GETTING STARTED WITH LINUX
+=======================================================
+
+== Informacoes de locale ficam em /usr/share/i18n/locales
+
+locale == mostra as configuracoes de locale atuais
+localectl == exibe as configuracoes de locale atuais
+localectl status == igual o de cime
+localectl list-locales == lista as localidades disponiveis
+localectl set-locale <locale>
+	ex: localectl set-locale LANG=en_CA.utf8
+
+timedatectl == exibe as configuracoes de timezone atuais
+timedatectl list-timezones == lista as timezones disponiveis
+timedatectl set-timezone <timezone> == seta o timezone
+	ex: timedatectl set-timezone America/Sao_Paulo
+
+pwd == present work directory, mostra onde estamos no diretorio atual (existe uma variavel de ambiente chamada PWD que guarda o valor do diretorio atual)
+echo $<variavel_de_ambiente> == imprime o valor da variavel de ambiente no console
+	ex: echo $PWD == imprime o diretorio atual
+
+minhaVariavel=Joao == cria uma variavel com o valor de Joao e o nome da variavel minhaVariavel
+echo $minhaVariavel == imprime na tela o valor da variavel que criei
+
+export <variavel> == exporta para todos os shells filhos a variavel
+	ex: export minhaVariavel
+
+env == lista todas variaveis de ambiente
+
+less <arquivo>  == exibe o conteudo do arquivo uma tela por vez
+
+| == redireciona o output do comando para outro comando
+	ex: ls | grep Joao
+
+type <comando> == mostra em que diretorio esta o comando
+
+history == mostra os comandos mais recente que foram usados no shell atual
+
+
+----- Comandos para os Drivers -----
+
+df -h == exibe todos os blocos de devices montados no sistema e o ponto de montagem
+	-h == display em gigabytes em vez de bytes
+	-t == limita a saida a apenas devices com formato passado como argumento
+df -ht ext4
+
+lsblk == mostra todos os devices conectados ao sistema fisico, mesmo que esse ainda nao tenha sido montado
+
+sudo mount <particao_que_quero_montar> <local_de_montagem> == monta a particao no local indicado
+	Ex: sudo mount /dev/sdb3 /media/meu_novo_hd == monta meu hd sata de 1T no diretorio /media/meu_novo_hd
+
+sudo dmesg == mostra como o kernel esta vendo os devices montados
+
+--- GRUB bootloader ---
+
+Permite voce controlar o processo de boot
+
+less /etc/default/grub == arquivos do grub
+/etc/grub.d == arquivos de configuracao do grub
+
+systemctl enable <modo_de_inicializacao> == permite mudar o modo que o sistema inicia
+	Ex: systemctl enable multi-user.target
+
+
+----------- Package manager APT -----------------
+
+less /etc/apt/source.list == contem todas as informacoes de repositorio que o sistema apt necessita para funcionar
+
+/etc/apt/sources.list.d == diretorio que contem arquivos de 3rd partie repos
+
+apt list --all-version == lista todos os softwares dinsponiveis
+	ex: contando qtos estao disponiveis: apt list --all-version | wc
+
+wc == (word count) conta as linhas, palavras e caracteres de qqr texto que eu mandar
+
+sudo apt update == atualiza os softwares locais do apt para realmente estar em sincronia com os repositorios online
+
+apt search <nome_do_programa_ou_descricao_do_que_estou_procurando> == procura nos repos um software com a descricao passada
+	Ex: apt search business card | less
+
+
+apt show <nome_do_software> == mostra maiores detalhes sobre o software
+	Ex: apt show glabels
+
+sudo apt install <software> == instala o software
+
+----------------- Linux Containers ------------------------
+
+sudo lxc start <container> == inicializa o container
+sudo lxc exec <container> /bin/bash == abre um bash no container centos7
+
+sudo apt install snapd == instala o snapd que eh um package manager que facilita a instalacao de softwares
+snap install nextcloud == instala uma cloud pessoal e opensource! =D
+
+
+==================================================================================
+		GETTING STARTED WITH THE LINUX COMMAND LINE
+==================================================================================
+
+man <comando_que_se_quer_informacoes>
+
+wget <url_para_fazer_download> == faz o download da url que eu inserir
+
+info == mostra um menu de varios topicos, posso pesquisar usando /
+
+info <cmd_que_desejo_infos> <topico> <topico> == ex: info wget examples simple
+
+A maioria dos programas mantem a documentacao e arquivos de exemplo no diretorio: /usr/share/doc
+
+<cmdo> --help == mostra um sumario mais simples de ajuda
+
+type <cmdo> == mostra como o comando seria interpretado pelo bash
+
+ip addr == mostra informacoes sobre o ip da rede
+
+cd == vai direto para o diretorio do usuario
+
+============================
+
+o arquivo .bashrc contem as configuracoes do shell nao logado
+
+.profile contem configuracoes para o shell logado
+
+/etc/passwd contem informacoes sobre os shells dos usuarios
+
+~/.bash_history == contem os 1000 comandos mais recentes como historico
+
+============================
+Sintaxe dos comandos:
+
+* o comando sempre comeca com o nome do comando
+* argumentos, geralmente com o prefixo -
+	Ex: ls -a ou ls --all ou ls -lht (lista com maiores detalhes, com tamanhos em formato facil para humanos e em ordem descendente)
+* parametros, os comandos podem ser parametrizados na maioria das vezes
+	ex: ls -l /etc == lista o conteudo do diretorio /etc
+
+=============================
+Searching Files
+
+locate <arquivo_a_localizar> == localiza o arquivo em todo o sistema
+
+sudo updatedb == atualiza o index de arquivos que o comando locate usa (por isso que ele localiza tao rapido)
+
+grep <palavra_a_localizar> == imprime na tela apenas as linhas que contem aquele palavra
+	Ex: cat /etc/group | grep joao
+
+>> == direciona o output de um comando para um arquivo, pode ser um arquivo ja existente ou se nao existir sera criado. Se o arquivo ja existir ele ira apendar o texto no final do arquivo
+	Ex: cat /etc/group | grep joao >> arquivo_resultado.txt
+
+> == caso eu use apenas um sinal, ele ira sobreescrever o conteudo do arquivo
+
+head <arquivo> == imprime as 10 primeiras linhas do arquivo
+
+tail <arquivo> == imprime as 10 ultimas linhas
+
+cut -d<separador> -f<posicao_do_campo> <arquivo> == corta o conteudo da linha, -d informa o separador e -f informa a posicao do campo que quero
+	Ex: cut -d: -f3 /etc/group
+
+sort -n == imprime o output em ordem ascendente
+	Ex: cut -d: -f3 /etc/group | sort -n
+sort -r == mesma coisa em ordem decrescente
+
+wc <arquivo> == mostra quantas linhas, palavras e letras o arquivo tem
+
+<comando> < <arquivo_de_input> == redireciona o input para um comando
+	ex: mysql -u root -p < mydatabase.sql
+
+<comando> 2> <arquivo_onde_gravar_a_saida> == redireciona a saida de erro para um arquivo
+	Ex: wget incorrecturl.com.br 2> errorfile.txt
+
+================================================================================
+Archive and Compressing
+
+tar == stands for Tape Archive
+
+gz == algoritmo de compressao
+
+tar xzf <arquivo> == o x diz para extrair o arquivo do archive, z para deszipar e f diz que o nome do arquivo segue a seguir
+
+tar czf <arquivo.tar.gz> <arquivo_comprimir>
+
+gzip <arquivo> == comprime com o algoritmo fzip
+
+bzip <arquivo> == comprime com o algoritmo bzip
+
+unzip <arquivo> == desipa arquivos comprimidos com zip
+
+zip <nome_do_arquivo_comprimido> <arquivos_a_comprimir> == comprime os arquivos para o formato zip
+
+=================================================================================
+Linux Kernel Modules and Periphels
+
+Dois passos principais para fazer o troubleshooting de um periferico
+   1) O dispositivo foi reconhecido pelo sistema?
+   2) O modulo apropriado do kernel foi carregado, que deixara o linux conversar com o dispositivo e deixar os usuario usarem
+
+lsusb == mostra os devices plugados via usb que o linux esta vendo
+
+lspci == mostra os dispositivos conectados atraves dos slots pci
+
+lshw == lista todos os hardwares
+
+uname == exibe informacoes do sistema
+	-r == exibe o release do kernel que esta sendo usado
+
+ls /lib/modules/`uname -r` == com `` posso usar um comando dentro de outro
+
+No diretorio /lib/modules/<kernel_version> geralmente posso encontrar as informacoes dos modulos. Por exemplo se o problema que eu estiver fazendo troubleshooting for de audio, eu procuraria no diretorio /lib/modules/kernel_version/sound
+Os modulos geralmente tem a extensao .ko
+
+lsmod == lista todos os modulos que foram carregados
+
+modprobe <nome_do_modulo> == carrega o modulo se ele nao tiver sido carregado
+
+========================================================================================
+Networking (troubleshooting)
+
+ip route show == exibe na primeira linha meu gateway (provavelmente meu roteador) e na segunda (ou terceira depende) o atributo src eh o ip da minha maquina (se estiver com docker na maquina as vezes a segunda linha pode ser o ip do docker)
+
+sudo dhclient == mostra se eu possuo um server dhcp que pode me fornecer um ip. Se eu ja estiver com um ip configurado esse comando nao me exibira nada. 
+
+ip addr == exibe o ip da minha maquina
+ss == exibe mais informacoes da rede
+
+host <dominio> == faz a query nos servidores de DNS e exibe o ip daquele dominio. Ex: host g1.com
+
+ping <ip> == manda pequenas mensagens para um servidor pedindo que ele responda de volta. Uso para saber se um servidor esta respondendo por exemplo
+
+cat /etc/resolv.conf == arquivo que contem as informacoes dos servidores de DNS. Em algumas distribuicoes do linux essa responsabilidade foi passada para o systemd-resolve --status
+
+systemd-resolve --status == exibe quem eh seu servidor DNS (ver linha DNS)
+
+less /etc/hosts == arquivo onde posso manualmente fazer minhas configuracoes DNS. Ou seja, posso por um ip mapeando um dominio. Ex: 200.1.33.100 g1.com, ou seja, sempre que eu tentar acessar g1.com o ip resolvido sera esse
+
+telnet <host> <porta> == abre uma conexao com o host e ainda permite que eu envie informacoes (por ex um http)
+	Ex: telnet desconstruindoaweb.com.br 80 ==> apos a conexao posso enviar um GET por exemplo
+
+dnstracer <host> == mostra todo o trace da resolucao de DNS, flag -4 faz o trace apenas para IPv4 e -s serve para identificar o server de onde o request deve comecar. Se eu puser . entao sera o A.ROOT-SERVERS.NET
+
+ss -tunlp == exibe todas as portas que estao sendo usadas e por qual processo esta sendo usada (substituto do netstat)
+
+===SSH=== 
+
+instalando o ssh no server (tbm permite ser cliente):
+apt install openssh-server
+
+instalando no cliente
+apt install openssh-client
+
+as configuracoes do client e do server podem ser encontradas em /etc/ssh
+
+o arquivo /etc/ssh/sshd_config possue as configuracoes para o comportamento do meu host
+o arquivo /etc/ssh/ssh_config possue as configuracoes para como meu sistema se loga como cliente em um servidor remoto
+
+ssh <usuario>@<ip_do_host> == loga no servidor utilizando ssh
+	flags: -p <porta> == identifica a porta que deve ser usada, por padrao eh a porta 22 e nao precisa especificar se estiver usando a padrao
+	       -i <arquivo_pem> == especifica um arquivo de permissoes caso seja necessario. Ex: na AWS eh necessario especificar o pem file.
+
+scp <arquivo_que_quero_transferir_para_o_server> <usuario>@<ip_do_server>:<caminho_absoluto_para_onde_copiar> == copia arquivos da minha maquina para o servidor que estou me conectando via ssh
+	Ex: scp ~/Documentos/test.txt ubuntu@10.1.192.1:/home/ubuntu/diretorio_teste
+
+
+==========================================================================================================================
+=================================== Getting Started With Linux System Administration =====================================
+==========================================================================================================================
+
+## System Performance Metrics
+
+/proc == as informacoes de mtos processos pode ser encontrada nessa pasta. Esses arquivos nao sao persistidos, pois sao referentes a processos.
+
+/proc/meminfo == tem informacoes sobre a memoria do pc
+
+/proc/cpuinfo == informacoes sobre todos os cores do processador
+
+top == mostra informacoes atuais do uso dos recursos (cpu, mem etc)
+
+free == mostra quanto de memoria estou usando no momento/memoria livre/swap etc.
+	flags: -h mostra em formato mais facil de ler
+
+df == mostra espaco disponivel em cada particao (mostra tbm as particoes virtuais)
+
+df -t <tipo> == a flag -t filtra o comando df para apenas o tipo passado. Ex: df -t ext4
+
+iftop -i <interface_de_rede> == exibe informacoes como banda da rede e etc. Ex: iftop -i wlp2s0
+
+## Monitoramente de processos
+
+ps == sem nenhum argumento mostra todos os processos ativos no shell que estou
+
+ps aux == exibe todos os processos que estao rodando no sistema
+
+ps <pid> == exibe informacoes apenas do processo com o pid passado
+
+journalctl --since "10 minutes ago" == exibe TODOS os logs do sistema de 10 minutos atras
+	Obs: posso apertar / para pesquisar algo (n vai para o resultado e N para o resultado anterior)
+
+/var/log == possui os arquivos de log do sistema caso eu nao queira usar o journalctl
+
+/var/log/auth* == arquivos de log de autenticacao
+/var/log/dpkg* == logs referentes ao apt e apt get
+/var/log/kern* == logs referentes ao kernel
+
+/var/log/syslog == a maioria dos logs quando eh gerada vai para o arquivo syslog
+
+dmesg == mensagens de log do ring buffer do kernel, mostra diversas informacoes, por exemplo qdo um dispositivo usb eh plugado e etc. Tambem mostra informacoes sobre alguns processos, por exemplo um processo que teve o acesso DENIED e etc
+
+kill <pid> == mata um processo
+
+killall <nome_do_processo> == mata todos os processos que tem esse nome
+
+systemctl status <nome_do_processo> == exibe informacoes sobre o processo como: loaded (se esta instalado), active (se esta ativo) e enabled (se eh carregado no startup do sistema automaticamente)
+
+systemctl disable <nome_do_processo> == desabilita um determinado processo de ser executado no startup do sistema automaticamente
+
+systemctl enable <nome_do_processo> == habilita um determinado processo para ser executado automaticamente no startup do sistema
+
+systemctl start <nome_do_processo> == inicia manualmente o processo
+
+systemctl stop <nome_do_processo> == para manualmente o processo
+
+================================================================
+
+nice <valor_do_nice> <comando> == o comando que eu for executar tera o valor de nice que eu definir. Nice eh um comando que ira especificar o quao importante aquele processo eh e o quanto ele pode consumir mais recursos que os outros. O valor padrao de nice eh 0. Quanto maior esse valor mais importante o processo eh, e mais recursos ele pode consumir, quanto menor o valor mais o cmdo se comportara de maneira facil para liberar recursos para outros processos com numero de nice maior.
+	Ex: nice 22 yes > /dev/null
+	    nice -19 yes > /dev/null
+	Obs: com o comando top podemos ver o valor nice dos processos na terceira coluna
+
+renice <valor_do_nice> -p <pid> == da um novo valor de nice a um processo que ja esta em execucao
+	Ex: renice 15 -p 1824
+
+====================================================================================================================
+#USERS & GROUPS
+
+/etc/shadow == contem os passwords dos usuarios criptografados
+
+/etc/passwd == nao contem informacoes de password (antigamente tinha), mas ele contem informacoes das contas de cada usuario e da conta do sistema
+	Obs: 1 campo == nome do usuario : 2  campo se tiver um x indica que o usuario tem um password no arquivo shadow : 3 e 4 campo sao o id do usuario e id do grupo do usuario : 5 campo localizacao do diretorio home do usuario e o ultimo campo indica o shell default do usuario
+
+/etc/group == contem o nome do grupo e o id do grupo e os usuarios que estao naquele grupo
+
+id <nome_do_usuario> == exibe o id do usuario, do grupo do usuario e os grupos que ele faz parte
+
+who == exibe quais usuarios estao atualmente logados, e quando a sessao deles comecou e da onde eles vieram
+
+w == alem de nos falar quem esta logado nos fala tbm oq esses usuarios estao fazendo
+
+last == exibe todos os logs no sistema desde o inicio do mes
+
+sudo useradd -m <diretorio_do_usuari> == cria um novo usuario e a flag -m cria um diretorio em /home com o nome que for especificado
+
+/etc/eskel == diretorio esqueleto, pois contem os arquivos ou diretorios que voce ira adicionar para todos os usuarios quando forem criados (ex: .bash_rc, .bash_profile etc) na sua home
+
+sudo passwd <usuario> == crio um password temporario para o usuario. Qdo o usuario se logar ele pode rodar o mm comando para mudar seu password
+
+sudo groupadd <nome_do_novo_grupo> == cria um grupo
+	Ex: sudo groupadd secret-group
+
+sudo chown :<nome_do_grupo> <diretorio_a_ser_mudado_a_propriedade> == muda a propriedade do diretorio especificado para o grupo especificado
+
+sudo chown <nome_do_proprietario>:<nome_do_grupo> <diretorio> == muda a propriedade do diretorio para o owner e grupo especificados
+
+sudo usermod -a -G <nome_do_grupo> <usuario_a_ser_adicionado> == adiciona um usuario a um grupo ja existente. Flag -a significa adicionar, e -G um grupo ja existente
+
+sudo chmod g+w <diretorio> == adiciona permissoes para os usuarios manipularem o conteudo do diretorio. g significa para os usuarios do grupo e +w permissao de escrita
+
+ls -l == lista com mais informacoes (-l quer dizer long, ou seja com mais info)
+
+ls -dl == lista mais informacoes do diretorio que estou
+
+
+====================================================================================================================================
+Propriedades dos objetos do filesystem
+====================================================================================================================================
+
+Os 10 primeiros caracteres do ls -l :
+
+	1o digito: um d se for um diretorio, senao -
+	2o ao 4o digito: como o owner pode manipular o arquivo (r == read, w == write, x == execute)
+	5o ao 7o digito: como os usuarios do grupo podem manipular o arquivo
+	8o ao 10o digito: como todos os outros nao root users podem manipular o arquivo
+
+depois dos 10 primeiros caracteres com as permissoes vem:
+---------- <owner_do_arquivo> <grupo_do_arquivo> 
+
+chmod o+w <arquivo_ou_dir> == chmod significa change mod. Muda os atributos de permissao de um objeto. O o siginifca que estou adicionando permissoes para os others, + siginifca que estou adicionando poderes, e x que o poder que estou adicionando eh o de execucao
+
+# Notacao numerica para permissoes
+	
+	READ 	r	4
+	WRITE 	w	2
+	EXECUTE X	1
+Obs: full permissions 7, read and execute 5, apenas execute 1, etc
+
+Exemplo:
+
+	chmod a+rx exemplo.txt == adiciona permissao de read e execute para todos (owner, group e outros)
+	ou
+	chmod 555 exemplo.txt == todos terao permissao de read e execute
+	outro exemplo
+	chmod 751 exemplo.txt == poderes de read, write e execute para o owner, read e execute para o grupo e apenas execute para os outros
+
+sudo chmod +s <diretorio> == faz com que apenas o proprietario possa deletar seu arquivo, ou seja, os membros do grupo apenas poderao deletar seus proprios arquivos
+
+sudo ln -s <path_original_para_o_arquivo> <path_de_onde_quero_criar_o_symlink>   == Symolic links sao links para um arquivo ou diretorio, sao bons pois dessa maneira nao eh necessario ficar copiando o arquivo se ele for necessario em otro diretorio, permitindo assim que o arquivo fique em sincronia com suas atualizacoes independente de onde ele estiver sendo acessado
+	Ex: sudo ln -s /home/joao/Documentos/scriptSecreto.sh /var/secret
+
+===================================================================================================================================
+============================================ Reducing system vulnerability ========================================================
+===================================================================================================================================
+
+sudo nmap -v -sT <host_que_quero_descobrir_quais_portas_estao_abertas> == exibe quais as portas estao abertas de um determinado computador que esteja na rede
+	Flags: -v para verboso, -sT para scanear usando o protocolo TCP
+
+
+
+
+
