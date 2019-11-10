@@ -427,6 +427,14 @@ sudo nmap -v -sT <host_que_quero_descobrir_quais_portas_estao_abertas> == exibe 
 	Flags: -v para verboso, -sT para scanear usando o protocolo TCP
 
 
+====================================================
+Encryption
+===================================================
+
+Solucao para arquivos e diretorios == ecryptfs
+
+Solucao para volumes inteiros == crypt setup 
+
 
 
 
