@@ -1,6 +1,1 @@
-#!/bin/bash
-
-for i in {0..10..2}
-  do
-	echo "We have been here $i times"
-  done
+/home/joao/Documentos/cursos/linux_pluralsight_courses/the_loop.sh
