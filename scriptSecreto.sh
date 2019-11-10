@@ -1,1 +1,1 @@
-/home/joao/Documentos/cursos/linux_pluralsight_courses/scriptSecreto.sh
+script secreto
