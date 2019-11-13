@@ -435,6 +435,18 @@ Solucao para arquivos e diretorios == ecryptfs
 
 Solucao para volumes inteiros == crypt setup 
 
+===============================================
+Containers
+==============================================
+
+para criar uma imagem basta criar um arquivo Dockerfile e nele por o scrip que se quer
+
+docker build -t <nome_da_tag> . <diretorio_onde_procurar_o_dockerfile> == cria uma imagem docker usando o dockerfile para tanto. Flag: -t eh para o nome da tag
+
+docker run -d -p <porta_do_host>:<porta_exposta_no_container> <nome_da_imagem> <argumento_a_ser_executado> == roda uma imagem docker. Flag: -d para ficar desatachado do shell, ou seja, nao abrir uma sessao shell no container, -p para fazer o binding da porta do host para a porta exposta no container
+	Ex: docker run -d -p 9089:80 docker-study-image /usr/sbin/apache2ctl -D FOREGROUND
+
+docker login == faz login no docker hub
 
 
 
